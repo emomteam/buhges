@@ -1,0 +1,15 @@
+{
+  "name": "buhges"
+  , "version": "0.0.1"
+  , "description": "build html pages"
+  , "keywords": ["handlebars", "mustache", "template"]
+  , "author": "Emom team"
+  , "bin" : { "buhges" : "./bin/buhges" }
+  , "repository": {
+    "type": "git"
+    , "url": "https://github.com/eMomTeam/buhges.git"
+  }
+  , "dependencies": {
+    "hogan.js": "2.0.0"
+  }
+}

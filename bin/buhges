@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+var hogan = require('hogan.js')
+  , fs    = require('fs')
+  , prod  = process.argv[2] == 'production'
+  , title = 'app'
+
+var modules = {}, layouts, pages, context = {}
+var modules_path = './modules/'
+var layouts_path = './layouts/'
+var pages_path = './pages/'
+
+// retrieve modules
+fs.readdirSync(modules_path).forEach(function (module) {
+
+  // retrieve sub modules
+  fs.readdirSync(modules_path + module).forEach(function (sub_file) {
+
+    if (!sub_file.match(/\.hbs$/) && !sub_file.match(/\.html$/)) return
+
+    var name = sub_file.replace(/\.hbs/, '').replace(/\.html/, '')
+    var module_path = modules_path + module + '/'
+    var template = fs.readFileSync(module_path + sub_file, 'utf-8'), data
+
+    if (fs.existsSync(module_path  + name + '.json')) {
+      data = JSON.parse(fs.readFileSync(module_path  + name + '.json', 'utf-8'))
+    }
+
+    if(module != name) {
+      name = module + '_' + name
+    }
+
+    template = hogan.compile(template)
+    modules[name] =  template.render(data)
+
+    if(sub_file.match(/\.hbs$/)) {
+      fs.writeFileSync(module_path  + sub_file.replace(/\.hbs/, '') + '.html', modules[name], 'utf-8')
+    }
+
+  })
+})
+
+// retrieve layouts
+fs.readdirSync(layouts_path).forEach(function (layout) {
+
+  if (!layout.match(/\.hbs$/)) return
+
+  var page_layout = fs.readFileSync(layouts_path + layout, 'utf-8')
+  layout = layout.replace(/\.hbs/, '')
+
+  // retrieve pages
+  fs.readdirSync(pages_path + layout).forEach(function (page) {
+
+    if (!page.match(/\.hbs$/)) return
+
+    var page_template = fs.readFileSync(pages_path + layout + '/' + page, 'utf-8'), page_name = page.replace(/\.hbs/, '')
+
+    var content = hogan.compile(page_template)
+
+    context.title = page_name
+    context.active = page_name
+
+    modules.content = content.render(context, modules)
+
+    page = hogan.compile(page_layout)
+    page = page.render(context, modules)
+
+    fs.writeFileSync('./'  + page_name + '.html', page, 'utf-8')
+  })
+})
