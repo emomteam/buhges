@@ -8,6 +8,7 @@ tool for build html pages from snippets html on mustache/handlebars version 0.0.
 
 ## use
 
+<pre>
 project/
   │
   ├── layouts/
@@ -31,9 +32,11 @@ project/
       │   └── etc.hbs {{>content_etc}}
       └── footer
           └── footer.hbs {{>footer}}
+</pre>
 
     buhges
 
+<pre>
 project/
   │
   ├── layouts/
@@ -64,3 +67,4 @@ project/
   ├── index.html (layouts/default.hbs + pages/default/index.hbs)
   ├── inner.html (layouts/default.hbs + pages/default/inner.hbs)
   └── etc.html (layouts/etc.hbs + pages/etc/etc.hbs)
+</pre>
