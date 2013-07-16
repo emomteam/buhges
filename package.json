@@ -1,7 +1,7 @@
 {
   "name": "buhges"
   , "version": "0.0.1"
-  , "description": "build html pages"
+  , "description": "build html pages from snippets html on mustache/handlebars"
   , "keywords": ["handlebars", "mustache", "template"]
   , "author": "Emom team"
   , "bin" : { "buhges" : "./bin/buhges" }

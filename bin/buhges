@@ -1,43 +1,7 @@
 #!/usr/bin/env node
-var hogan = require('hogan.js')
-  , fs    = require('fs')
-  , prod  = process.argv[2] == 'production'
-  , title = 'app'
+var hogan = require('hogan.js'), fs = require('fs')
 
-var modules = {}, layouts, pages, context = {}
-var modules_path = './modules/'
-var layouts_path = './layouts/'
-var pages_path = './pages/'
-
-// retrieve modules
-fs.readdirSync(modules_path).forEach(function (module) {
-
-  // retrieve sub modules
-  fs.readdirSync(modules_path + module).forEach(function (sub_file) {
-
-    if (!sub_file.match(/\.hbs$/) && !sub_file.match(/\.html$/)) return
-
-    var name = sub_file.replace(/\.hbs/, '').replace(/\.html/, '')
-    var module_path = modules_path + module + '/'
-    var template = fs.readFileSync(module_path + sub_file, 'utf-8'), data
-
-    if (fs.existsSync(module_path  + name + '.json')) {
-      data = JSON.parse(fs.readFileSync(module_path  + name + '.json', 'utf-8'))
-    }
-
-    if(module != name) {
-      name = module + '_' + name
-    }
-
-    template = hogan.compile(template)
-    modules[name] =  template.render(data)
-
-    if(sub_file.match(/\.hbs$/)) {
-      fs.writeFileSync(module_path  + sub_file.replace(/\.hbs/, '') + '.html', modules[name], 'utf-8')
-    }
-
-  })
-})
+var context = {}, snippets_path = './snippets/', layouts_path = './layouts/', pages_path = './pages/'
 
 // retrieve layouts
 fs.readdirSync(layouts_path).forEach(function (layout) {
@@ -46,6 +10,7 @@ fs.readdirSync(layouts_path).forEach(function (layout) {
 
   var page_layout = fs.readFileSync(layouts_path + layout, 'utf-8')
   layout = layout.replace(/\.hbs/, '')
+  console.log(layout)
 
   // retrieve pages
   fs.readdirSync(pages_path + layout).forEach(function (page) {
@@ -53,17 +18,65 @@ fs.readdirSync(layouts_path).forEach(function (layout) {
     if (!page.match(/\.hbs$/)) return
 
     var page_template = fs.readFileSync(pages_path + layout + '/' + page, 'utf-8'), page_name = page.replace(/\.hbs/, '')
-
-    var content = hogan.compile(page_template)
+    console.log(' '+page_name)
 
     context.title = page_name
     context.active = page_name
 
-    modules.content = content.render(context, modules)
+    var snippets = getSnippets(snippets_path, page_name, true)
+
+    var content = hogan.compile(page_template)
+    snippets.content = content.render(context, snippets)
 
     page = hogan.compile(page_layout)
-    page = page.render(context, modules)
+    page = page.render(context, snippets)
 
     fs.writeFileSync('./'  + page_name + '.html', page, 'utf-8')
   })
 })
+
+function getSnippets (snippets_path, page_active, snippets_in_snippet) {
+
+  var snippets = {}
+
+  // retrieve main name snippet
+  fs.readdirSync(snippets_path).forEach(function (snippet) {
+
+    // retrieve snippet
+    fs.readdirSync(snippets_path + snippet).forEach(function (file_snippet) {
+
+      if (!file_snippet.match(/\.hbs$/) && !file_snippet.match(/\.html$/)) return
+
+      var name = file_snippet.replace(/\.hbs/, '').replace(/\.html/, '')
+      var snippet_path = snippets_path + snippet + '/'
+      var template = fs.readFileSync(snippet_path + file_snippet, 'utf-8'), data = {}
+
+      if (fs.existsSync(snippet_path  + name + '.json')) {
+        data = JSON.parse(fs.readFileSync(snippet_path  + name + '.json', 'utf-8'))
+      }
+
+      data.active = page_active
+
+      if(snippet != name) {
+        name = snippet + '_' + name
+      }
+
+      template = hogan.compile(template)
+
+      if(snippets_in_snippet) {
+        var snippets_in = getSnippets(snippets_path, page_active, false)
+        snippets[name] =  template.render(data, snippets_in)
+      } else {
+        snippets[name] =  template.render(data)
+      }
+
+      if(file_snippet.match(/\.hbs$/)) {
+        fs.writeFileSync(snippet_path  + file_snippet.replace(/\.hbs/, '') + '.html', snippets[name], 'utf-8')
+      }
+
+    })
+  })
+
+  return snippets
+
+}
