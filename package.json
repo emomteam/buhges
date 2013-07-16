@@ -1,6 +1,6 @@
 {
   "name": "buhges"
-  , "version": "0.0.1"
+  , "version": "0.0.2"
   , "description": "build html pages from snippets html on mustache/handlebars"
   , "keywords": ["handlebars", "mustache", "template"]
   , "author": "Emom team"
