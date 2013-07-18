@@ -1,15 +1,31 @@
 {
   "name": "buhges"
+  , "description": "tool for build html pages of snippets and layers, supports mustache/handlebars templates"
   , "version": "0.0.2"
-  , "description": "build html pages from snippets html on mustache/handlebars"
-  , "keywords": ["handlebars", "mustache", "template"]
-  , "author": "Emom team"
-  , "bin" : { "buhges" : "./bin/buhges" }
+  , "homepage": "https://github.com/Emomteam/buhges"
+  , "keywords": ["handlebars", "mustache", "template", "tool", "less"]
+  ,  "author": {
+    "name": "Ilya Rogov"
+    , "url": "ilyar.software@gmail.com"
+  }
+  , "licenses": [
+    {
+      "type": "Apache License, Version 2.0"
+      , "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ]
   , "repository": {
     "type": "git"
-    , "url": "https://github.com/eMomTeam/buhges.git"
+    , "url": "https://github.com/Emomteam/buhges.git"
+  }
+  , "engine": {
+    "node": ">=0.4.7"
   }
   , "dependencies": {
     "hogan.js": "2.0.0"
+    , "connect": "2.8.4"
+    , "recess": "1.1.9"
   }
+  , "main": "./bin/buhges"
+  , "bin" : { "buhges" : "./bin/buhges" }
 }
