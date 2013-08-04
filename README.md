@@ -1,4 +1,4 @@
-# [buhges v0.0.2](https://github.com/Emomteam/buhges)  [![NPM version](https://badge.fury.io/js/buhges.png)](https://npmjs.org/package/buhges)
+# [buhges v0.0.3](https://github.com/Emomteam/buhges) (beta)  [![NPM version](https://badge.fury.io/js/buhges.png)](https://npmjs.org/package/buhges)
 
 tool for build html pages of snippets and layers, supports [mustache](http://mustache.github.io)/[handlebars](handlebars) templates
 
@@ -24,8 +24,9 @@ project/
   │
   └── snippets/
       ├── header
+      │   ├── data
+      │   │   └── nav.json
       │   ├── header.html {{>header}}
-      │   ├── nav.json
       │   └── nav.hbs {{>header_nav}}
       ├── content
       │   ├── news.html {{>content_new}}
@@ -38,31 +39,6 @@ project/
 
 <pre>
 project/
-  │
-  ├── layouts/
-  │   ├── default.hbs
-  │   └── etc.hbs
-  │
-  ├── pages/
-  │   ├── default
-  │   │   ├── index.hbs
-  │   │   └── inner.hbs
-  │   └── etc
-  │       └── etc.hbs
-  │
-  ├── snippets/
-  │   ├── header
-  │   │   ├── header.html
-  │   │   ├── nav.json
-  │   │   ├── nav.hbs
-  │   │   └── nav.html (from nav.hbs + nav.json)
-  │   ├── content
-  │   │   ├── news.html
-  │   │   ├── etc.hbs
-  │   │   └── etc.html (from etc.hbs)
-  │   └── footer
-  │       ├── footer.hbs
-  │       └── footer.html (from footer.hbs)
   │
   ├── index.html (layouts/default.hbs + pages/default/index.hbs)
   ├── inner.html (layouts/default.hbs + pages/default/inner.hbs)
